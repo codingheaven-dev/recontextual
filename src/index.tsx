@@ -27,6 +27,7 @@ export function recontextualize<T>(context: Recontext<T>) {
       if (!ctx) {
         throw new Error('No context');
       }
+      
       if (!selector) {
         return useContext(context);
       }

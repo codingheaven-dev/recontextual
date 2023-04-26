@@ -63,33 +63,36 @@ export default App;
 function createContext<ContextType>(): Recontext<ContextType>;
 ```
 
-`createContext` takes no arguments, but should be given a type, `CpntextType`, as generic argument. The create context will be of that type. The default value for the context will be `null`, but that will not be selectable. If you try to select without providing a non-null context value, selecting will throw a runtime error.
+`createContext` takes no arguments, but should be given a type, `ContextType`, as generic argument. The create context will be of that type. The default value for the context will be `null`, but that will not be selectable. If you try to select without providing a non-null context value, selecting will throw a runtime error.
 
 ### recontextualize
 
-```ts
-function recontextualize(context: Recontext<ContextType>): UseSelectableContext<ContextType>;
+```tsx
+function recontextualize(context: Recontext<ContextType>): {
+  (): ContextType;
+  <ContextSelection>(selector: (ctx: ContextType) => ContextSelection, isMulti?: boolean): ContextSelection;
+};
 ```
 
-`recontextualize` is a custom hook generator. It is invoked with a context created by `createContext` and returns a context selector function, `useSpecificContext`, e.g.:
+`recontextualize` is a *custom hook generator*. It is invoked with a context created by `createContext` and returns a context selector hook, e.g. `useSpecificContext`, as in this example:
 
 
 ```ts
-interface ContextType { ... };
-const SpecificContext = createContext<ContextType>();
+interface SpecificContextType { ... };
+const SpecificContext = createContext<SpecificContextType>();
 const useSpecificContext = recontextualize(SpecificContext);
 ```
 
-This context selector function has the following overloaded types:
+This context selector function has the following three call signatures:
 
 ```ts
-function useSpecificContext(): ContextType;
-function useSpecificContext<U>(selector: (ctx: ContextType) => U): U;
-function useSpecificContext<U>(selector: (ctx: ContextType) => U, isMulti: boolean): U;
+function useSpecificContext(): SpecificContextType;
+function useSpecificContext<U>(selector: (ctx: SpecificContextType) => U): U;
+function useSpecificContext<U>(selector: (ctx: SpecificContextType) => U, isMulti: boolean): U;
 ```
 
-If `useSpecificContext` is invoked without arguments, the hook returns the entire context value (even if not provided, which would then be `null`). Use this variant to select the entire context.
+If `useSpecificContext` is invoked without arguments, the hook returns the entire context value. Use this variant to select *the entire context*.
 
-If `useSpecificContext` is invoked with a single selector argument or with a selector argument and `isMulti=false`, the hook returns the value returned by the selector argument only if the value has changed using strict equality. Use this variant to select a single value from the context.
+If `useSpecificContext` is invoked with a single selector argument or with a selector argument and `isMulti=false`, the hook returns the value returned by the selector argument only if the value has changed using *strict equality*. Use this variant to select *a single value from the context*.
 
-If `useSpecificContext` is invoked with a selector argument and `isMulti=true`, the hook returns the object returned by the selector argument only if the object has changed using shallow equality on the values of the object. Use this variant to select multiple values from the context.
+If `useSpecificContext` is invoked with a selector argument and `isMulti=true`, the hook returns the object returned by the selector argument only if the object has changed using *shallow equality on the values of the object*. Use this variant to select *multiple values from the context*.
