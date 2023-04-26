@@ -14,7 +14,7 @@ npm install --save recontextual
 
 ## Example
 
-````ts
+```tsx
 import * as React from 'react';
 import { createContext, recontextualize } from '../.';
 
@@ -54,7 +54,6 @@ function App() {
 
 export default App;
 ```
-
 
 ## API Reference
 
