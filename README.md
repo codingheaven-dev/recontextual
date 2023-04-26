@@ -1,6 +1,6 @@
 # Recontextual: simple, easy-to-type, selectable contexts
 
-This is a library built upon use-context-selector.
+This is a library built upon [`use-context-selector`](https://github.com/dai-shi/use-context-selector).
 
 It has a simpler API and is easier to type and select from.
 
@@ -88,9 +88,8 @@ function useSpecificContext<U>(selector: (ctx: ContextType) => U): U;
 function useSpecificContext<U>(selector: (ctx: ContextType) => U, isMulti: boolean): U;
 ```
 
-If `useSpecificContext` is invoked without arguments, the hook returns the entire context value is returned (even if `null`);
+If `useSpecificContext` is invoked without arguments, the hook returns the entire context value (even if not provided, which would then be `null`). Use this variant to select the entire context.
 
-If `useSpecificContext` is invoking with a single selector argument or with a selector argument as `isMulti=false`, the hook returns the value returned by the selector argument only if the value has changed using strict equality.
+If `useSpecificContext` is invoked with a single selector argument or with a selector argument and `isMulti=false`, the hook returns the value returned by the selector argument only if the value has changed using strict equality. Use this variant to select a single value from the context.
 
-If `useSpecificContext` is invoking with a selector argument and `isMulti=true`, the hook returns the object returned by the selector argument only if the object has changed using shallow equality on the keys and values of the object.
-
+If `useSpecificContext` is invoked with a selector argument and `isMulti=true`, the hook returns the object returned by the selector argument only if the object has changed using shallow equality on the values of the object. Use this variant to select multiple values from the context.
