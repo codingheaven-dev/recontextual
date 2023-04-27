@@ -1,20 +1,19 @@
 import * as React from 'react';
-import { createContext, recontextualize } from '../.';
+import recontextualize from '../.';
 
-interface ExampleContextType {
+interface IExample {
   value: string;
   setValue: (newValue: string) => void;
 }
 
-const ExampleContext = createContext<ExampleContextType>();
-const useExample = recontextualize(ExampleContext);
+const [ExampleProvider, useExample] = recontextualize<IExample>();
 
 function FirstComponent() {
   const { value, setValue } = useExample(
     ({ value, setValue }) => ({ value, setValue }),
     true
   );
-  return <input value={value} onChange={(evt) => setValue(evt.target.value)} />;
+  return <input value={value} onChange={evt => setValue(evt.target.value)} />;
 }
 function SecondComponent() {
   const value = useExample(({ value }) => value);
@@ -28,10 +27,10 @@ function App() {
     setValue: (newValue: string) => set(newValue),
   };
   return (
-    <ExampleContext.Provider value={contextValue}>
+    <ExampleProvider value={contextValue}>
       <FirstComponent />
       <SecondComponent />
-    </ExampleContext.Provider>
+    </ExampleProvider>
   );
 }
 
